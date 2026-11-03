@@ -1,35 +1,38 @@
 # AESTHIQUE — GSD PROJECT STATE
 
-> **Current Milestone:** Milestone 1 Completed -> Advancing to Milestone 2  
+> **Current Milestone:** Milestone 2 Completed -> Advancing to Milestone 3  
 > **Last Updated:** 2026-11-04  
-> **Active Focus:** Initialize Next.js Storefront & Design System
+> **Active Focus:** Database Architecture, Supabase Migrations & Authentication
 
 ---
 
 ## Current Status Overview
 - **Repository:** Initialized git repository in `e:\AESTHIQUE`.
 - **Brand Assets:** Extracted and stored official logo at `public/brand/aesthique-logo.png`.
-- **Architecture & Planning:** All 9 core technical documentation deliverables completed:
-  1. `PROJECT.md` (and `.planning/PROJECT.md`)
-  2. `REQUIREMENTS.md` (and `.planning/REQUIREMENTS.md`)
-  3. `ARCHITECTURE.md`
-  4. `DATABASE_SCHEMA.md`
-  5. `API_DOCUMENTATION.md`
-  6. `SECURITY.md`
-  7. `INTEGRATIONS.md`
-  8. `TESTING_PLAN.md`
-  9. `DEPLOYMENT.md`
-  10. `.planning/ROADMAP.md`
-  11. `.planning/STATE.md`
+- **Milestone 1 (Discovery & Architecture):** Complete with all 9 core specifications committed.
+- **Milestone 2 (Design System & Storefront):** 100% complete:
+  - Next.js 15 + TypeScript + Tailwind CSS with custom luxury color palette (Ivory `#F8F4ED`, Gold `#C99A68`, Copper `#B97852`, Espresso `#30251F`, Beige `#E9DFD2`).
+  - Storefront state management via `StoreProvider` (persistent cart, wishlist, coupon engine, toasts).
+  - 12-section Editorial Homepage with hero storytelling, shop by category, bestsellers, new arrivals, promo banner, customer reviews, and social gallery.
+  - Shop All catalog page with multi-facet filters (category, price range, stock) and sorting.
+  - Category dynamic pages (`/category/[slug]`).
+  - Product Details Page (PDP) with multi-photo gallery, zoom modal, variant switching, quantity steppers, pincode serviceability checker, and related products.
+  - Cart page & slide-over Mini Cart Drawer with free shipping progress bar.
+  - Wishlist management with one-click move to bag.
+  - Single-page checkout with Indian address validation, payment options (Razorpay & COD), and order summary.
+  - Customer Auth pages (Login, Register, Forgot Password).
+  - Customer Account portal (Dashboard, Order History, Real-time Shiprocket Tracking view).
+  - Brand & Legal pages (About Us, Contact Us, FAQ, Privacy, Terms, Shipping, Returns).
+  - Full production build (`npx next build`) passed with 21/21 routes prerendered.
 
 ---
 
 ## Milestone Progress Tracker
 - [x] **Milestone 1: Discovery & Architecture** (Completed)
-- [ ] **Milestone 2: Design System & Storefront** (Active Next)
-- [ ] **Milestone 3: Database & Authentication**
+- [x] **Milestone 2: Design System & Storefront** (Completed)
+- [ ] **Milestone 3: Database & Authentication** (Active Next)
 - [ ] **Milestone 4: Product & Inventory Management**
-- [ ] **Milestone 5: Cart, Wishlist & Checkout**
+- [ ] **Milestone 5: Cart, Wishlist & Checkout Backend**
 - [ ] **Milestone 6: Razorpay Integration**
 - [ ] **Milestone 7: Shiprocket Integration**
 - [ ] **Milestone 8: Complete Admin Dashboard**

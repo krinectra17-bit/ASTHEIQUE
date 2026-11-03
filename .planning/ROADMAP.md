@@ -14,16 +14,16 @@
 - [x] Step 1.4: Database schema design with 22 relational tables & RLS (`DATABASE_SCHEMA.md`).
 - [x] Step 1.5: API contract, security specifications, and integration design (`API_DOCUMENTATION.md`, `SECURITY.md`, `INTEGRATIONS.md`, `TESTING_PLAN.md`, `DEPLOYMENT.md`).
 
-### Phase 2: Design System & Storefront Foundation (Status: Next)
-- [ ] Step 2.1: Initialize Next.js 15 + TypeScript + Tailwind CSS project with custom AESTHIQUE luxury color palette and serif typography tokens.
-- [ ] Step 2.2: Build core reusable UI primitives (`Button`, `Badge`, `Modal`, `Input`, `Drawer`, `Accordion`).
-- [ ] Step 2.3: Build responsive navigation Header with AESTHIQUE logo, category drawer, quick search, and persistent mini-cart bag.
-- [ ] Step 2.4: Build 12-section Editorial Homepage with high-converting lifestyle storytelling.
-- [ ] Step 2.5: Build Shop All, Category listing, and Subcategory listing pages with responsive filters.
-- [ ] Step 2.6: Build Product Detail Page (PDP) with multi-image gallery, variant selector, interactive pincode checker, and sticky mobile add-to-cart.
-- [ ] Step 2.7: Build all brand & policy pages (About Us, Contact Us, FAQ, Privacy Policy, Terms, Shipping Policy, Returns & Refund Policy).
+### Phase 2: Design System & Storefront Foundation (Status: Completed)
+- [x] Step 2.1: Initialize Next.js 15 + TypeScript + Tailwind CSS project with custom AESTHIQUE luxury color palette and serif typography tokens.
+- [x] Step 2.2: Build core reusable UI primitives (`Button`, `Badge`, `Modal`, `Input`, `Drawer`, `Accordion`).
+- [x] Step 2.3: Build responsive navigation Header with AESTHIQUE logo, category drawer, quick search, and persistent mini-cart bag.
+- [x] Step 2.4: Build 12-section Editorial Homepage with high-converting lifestyle storytelling.
+- [x] Step 2.5: Build Shop All, Category listing, and Subcategory listing pages with responsive filters.
+- [x] Step 2.6: Build Product Detail Page (PDP) with multi-image gallery, variant selector, interactive pincode checker, and sticky mobile add-to-cart.
+- [x] Step 2.7: Build all brand & policy pages (About Us, Contact Us, FAQ, Privacy Policy, Terms, Shipping Policy, Returns & Refund Policy).
 
-### Phase 3: Database & Authentication
+### Phase 3: Database & Authentication (Status: Next)
 - [ ] Step 3.1: Generate complete Supabase PostgreSQL migration scripts for all 22 tables with foreign keys and indexes.
 - [ ] Step 3.2: Configure Row Level Security (RLS) policies for customer isolation and admin access.
 - [ ] Step 3.3: Build Supabase Auth integration (Customer registration, login, logout, password recovery, session handling).
