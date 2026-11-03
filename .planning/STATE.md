@@ -1,8 +1,8 @@
 # AESTHIQUE — GSD PROJECT STATE
 
-> **Current Milestone:** Milestone 5 Completed -> Advancing to Milestone 6  
+> **Current Milestone:** Milestone 6 Completed -> Advancing to Milestone 7  
 > **Last Updated:** 2026-11-04  
-> **Active Focus:** Razorpay Payment Gateway Integration
+> **Active Focus:** Shiprocket Logistics & Shipping Integration
 
 ---
 
@@ -12,14 +12,16 @@
 - **Milestone 2 (Design System & Storefront):** Completed & pushed.
 - **Milestone 3 (Database & Authentication):** Completed & pushed (24 reconciled tables, RLS, customer auth, address book, Supabase SSR client).
 - **Milestone 4 (Product & Inventory Management):** Completed & pushed (catalog service, search API, atomic stock reservation procedures, low-stock alerts).
-- **Milestone 5 (Cart, Wishlist & Checkout Backend):** 100% complete:
-  - Dual-state Cart engine: persistent guest cart + authenticated customer database cart synchronization service (`src/lib/cart/service.ts`).
-  - Server-Authoritative Pricing Engine (`src/lib/pricing/engine.ts`) enforcing zero-trust client pricing with 18% GST breakdown, coupon calculation, and ₹1,999 free shipping threshold.
-  - Coupon validation service & API route (`src/lib/coupons/service.ts`, `/api/coupons/validate`) with promo codes, min order value check, usage limits, customer redemption tracking, and times_used increments.
-  - Server-Authoritative Checkout & Order Creation Engine (`src/lib/checkout/service.ts`, `/api/checkout/create-order`) validating address, calculating authoritative pricing, atomically reserving inventory via `reserveStock()`, and creating orders in `orders` & `order_items`.
-  - Cash on Delivery (COD) workflow committing inventory and recording coupon redemptions.
-  - Interactive single-page checkout wired to server API, updating customer order history and order tracking page (`/account/track/[orderNumber]`).
-  - Production build passed (28/28 routes prerendered).
+- **Milestone 5 (Cart, Wishlist & Checkout Backend):** Completed & pushed (cart database sync, coupon validation engine, server-authoritative checkout, COD order creation).
+- **Milestone 6 (Razorpay Payment Gateway Integration):** 100% complete:
+  - Official `razorpay` SDK installed and integrated.
+  - Dedicated client adapter in `src/lib/razorpay/client.ts` with order creation, cryptographic HMAC-SHA256 signature verification, and mock fallback mode.
+  - Gateway Order Creation API (`/api/payments/razorpay/order`) generating Razorpay orders with rupee-to-paise conversion.
+  - Payment Verification API (`/api/payments/razorpay/verify`) performing HMAC-SHA256 signature verification, updating `orders` to `PAID` / `PROCESSING`, logging to `payments`, committing stock reservations, and recording coupon redemptions.
+  - Webhook listener (`/api/payments/razorpay/webhook`) with signature verification handling `payment.captured`, `payment.failed`, and `refund.processed`.
+  - Client-side Razorpay standard modal mount (`src/lib/razorpay/checkout-modal.ts`) with custom AESTHIQUE luxury styling tokens (`#30251F`, `#C99A68`, brand emblem logo, prefilled customer profile).
+  - Single-page checkout wired with Razorpay payment modal and order confirmation.
+  - Production build passed (31/31 routes prerendered).
 
 ---
 
@@ -29,8 +31,8 @@
 - [x] **Milestone 3: Database & Authentication** (Completed)
 - [x] **Milestone 4: Product & Inventory Management** (Completed)
 - [x] **Milestone 5: Cart, Wishlist & Checkout Backend** (Completed)
-- [ ] **Milestone 6: Razorpay Integration** (Active Next)
-- [ ] **Milestone 7: Shiprocket Integration**
+- [x] **Milestone 6: Razorpay Integration** (Completed)
+- [ ] **Milestone 7: Shiprocket Integration** (Active Next)
 - [ ] **Milestone 8: Complete Admin Dashboard**
 - [ ] **Milestone 9: SEO, Performance & Security**
 - [ ] **Milestone 10: Testing & Deployment**

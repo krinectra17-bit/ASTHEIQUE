@@ -41,14 +41,14 @@
 - [x] Step 5.4: Customer Wishlist with one-click move to cart.
 - [x] Step 5.5: Comprehensive single-page checkout (address collection, payment method selection, atomic order creation).
 
-### Phase 6: Razorpay Payment Gateway Integration (Status: Active)
-- [ ] Step 6.1: Dedicated Razorpay service adapter with test mode support.
-- [ ] Step 6.2: Server-side order creation (`/api/checkout/create-intent`).
-- [ ] Step 6.3: Client-side Razorpay modal mount with AESTHIQUE theme.
-- [ ] Step 6.4: Cryptographic HMAC-SHA256 signature verification route (`/api/payments/razorpay/verify`).
-- [ ] Step 6.5: Razorpay webhook listener with signature verification and idempotency handling.
+### Phase 6: Razorpay Payment Gateway Integration (Status: Completed)
+- [x] Step 6.1: Dedicated Razorpay service adapter with test mode and development mock fallback.
+- [x] Step 6.2: Server-side order creation (`/api/payments/razorpay/order`).
+- [x] Step 6.3: Client-side Razorpay modal mount with AESTHIQUE luxury theme (`src/lib/razorpay/checkout-modal.ts`).
+- [x] Step 6.4: Cryptographic HMAC-SHA256 signature verification route (`/api/payments/razorpay/verify`).
+- [x] Step 6.5: Razorpay webhook listener with signature verification and idempotency handling (`/api/payments/razorpay/webhook`).
 
-### Phase 7: Shiprocket Shipping Integration
+### Phase 7: Shiprocket Shipping Integration (Status: Active)
 - [ ] Step 7.1: Dedicated Shiprocket service adapter with automated JWT authentication and cache-aware refresh.
 - [ ] Step 7.2: Real-time pincode serviceability & estimated delivery date checker.
 - [ ] Step 7.3: Order fulfillment workflow: shipment creation, courier allocation, AWB generation, and pickup scheduling.

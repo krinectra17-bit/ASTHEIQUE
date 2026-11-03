@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useStore } from '@/context/store-context';
 import { formatPrice, generateOrderNumber } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { openRazorpayCheckout } from '@/lib/razorpay/checkout-modal';
 import {
   ShieldCheck,
   Truck,
@@ -137,11 +138,43 @@ export default function CheckoutPage() {
         throw new Error(data.error || 'Failed to place order. Please review your details.');
       }
 
-      const newOrderNumber = data.orderNumber || generateOrderNumber();
+      let confirmedOrderNumber = data.orderNumber || generateOrderNumber();
+
+      if (data.isRazorpay) {
+        // Step 1: Initialize Razorpay Gateway Order
+        const rzpRes = await fetch('/api/payments/razorpay/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: data.orderId,
+            amount: data.totalAmount,
+          }),
+        });
+
+        const rzpData = await rzpRes.json();
+        if (!rzpRes.ok || !rzpData.success) {
+          throw new Error(rzpData.error || 'Failed to initialize payment gateway.');
+        }
+
+        // Step 2: Open Razorpay modal with custom AESTHIQUE luxury theme
+        const paymentResult = await openRazorpayCheckout({
+          orderId: data.orderId,
+          orderNumber: data.orderNumber,
+          razorpayOrderId: rzpData.razorpayOrderId,
+          amount: rzpData.amount,
+          keyId: rzpData.keyId,
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          customerPhone: formData.mobile,
+          isMock: rzpData.isMock,
+        });
+
+        confirmedOrderNumber = paymentResult.orderNumber;
+      }
 
       // Store placed order in local customer history
       const placedOrder = {
-        orderNumber: newOrderNumber,
+        orderNumber: confirmedOrderNumber,
         items: cart,
         pricing,
         shippingAddress: formData,
@@ -160,7 +193,7 @@ export default function CheckoutPage() {
       }
 
       setOrderSuccess({
-        orderNumber: newOrderNumber,
+        orderNumber: confirmedOrderNumber,
         totalAmount: pricing.total,
         paymentMethod: formData.paymentMethod,
       });
