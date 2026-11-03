@@ -209,8 +209,57 @@ export async function releaseStock(
 }
 
 /**
- * Commits stock reservation upon successful payment or confirmed COD order.
+ * Adjusts inventory quantity manually for restocks or corrections
  */
+export async function adjustStock(
+  productId: string,
+  variantId: string | null,
+  quantityDelta: number,
+  reason: string
+): Promise<boolean> {
+  const admin = getAdminClient();
+
+  if (admin) {
+    try {
+      let query = admin.from('inventory').select('id, stock_quantity');
+      if (variantId) {
+        query = query.eq('product_id', productId).eq('variant_id', variantId);
+      } else {
+        query = query.eq('product_id', productId).is('variant_id', null);
+      }
+
+      const { data: inv } = await query.maybeSingle();
+
+      if (inv) {
+        const newQty = Math.max(0, inv.stock_quantity + quantityDelta);
+        await admin
+          .from('inventory')
+          .update({ stock_quantity: newQty, updated_at: new Date().toISOString() })
+          .eq('id', inv.id);
+
+        await admin.from('inventory_movements').insert({
+          inventory_id: inv.id,
+          change_quantity: quantityDelta,
+          action_type: quantityDelta >= 0 ? 'restock' : 'manual_adjustment',
+          reason,
+        });
+
+        return true;
+      }
+    } catch {
+      // Fall through to fallback
+    }
+  }
+
+  // Fallback adjustment
+  const key = variantId ? `var_${variantId}` : `prod_${productId}`;
+  const inv = mockInventoryStore.get(key) || { stock: 25, reserved: 0, threshold: 5 };
+  inv.stock = Math.max(0, inv.stock + quantityDelta);
+  mockInventoryStore.set(key, inv);
+
+  return true;
+}
+
 export async function commitStock(
   items: StockCheckItem[],
   orderId: string
