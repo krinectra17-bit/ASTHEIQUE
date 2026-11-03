@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { signIn } from '@/app/auth/actions';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
+import { ArrowRight, Lock, Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,15 +14,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
     setIsLoading(true);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      // Local session demo login
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+
+    const result = await signIn(formData);
+    setIsLoading(false);
+
+    if (result.success) {
+      setSuccess('Authenticated successfully! Redirecting...');
+      // Sync local storage session indicator
       localStorage.setItem(
         'aesthique_customer_session',
         JSON.stringify({
@@ -30,11 +40,13 @@ export default function LoginPage() {
           isLoggedIn: true,
         })
       );
-      router.push('/account');
-    } catch {
-      setError('Invalid email or password. Please verify and retry.');
-    } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        router.push('/account');
+        router.refresh();
+      }, 1000);
+    } else {
+      // If Supabase returns an error, show it clearly
+      setError(result.error || 'Invalid email or password.');
     }
   };
 
@@ -63,6 +75,13 @@ export default function LoginPage() {
           <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            <span>{success}</span>
           </div>
         )}
 

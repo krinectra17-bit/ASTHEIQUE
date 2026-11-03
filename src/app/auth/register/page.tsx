@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { signUp } from '@/app/auth/actions';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Lock, Mail, User, Phone, AlertCircle } from 'lucide-react';
+import { ArrowRight, Lock, Mail, User, Phone, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -18,10 +19,12 @@ export default function RegisterPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match. Please verify.');
@@ -34,8 +37,17 @@ export default function RegisterPage() {
 
     setIsLoading(true);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
+    const fData = new FormData();
+    fData.append('email', formData.email);
+    fData.append('password', formData.password);
+    fData.append('fullName', formData.fullName);
+    fData.append('phone', formData.phone);
+
+    const result = await signUp(fData);
+    setIsLoading(false);
+
+    if (result.success) {
+      setSuccess(result.message || 'Registration successful!');
       localStorage.setItem(
         'aesthique_customer_session',
         JSON.stringify({
@@ -45,11 +57,12 @@ export default function RegisterPage() {
           isLoggedIn: true,
         })
       );
-      router.push('/account');
-    } catch {
-      setError('Unable to complete registration. Please try again.');
-    } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        router.push('/account');
+        router.refresh();
+      }, 1500);
+    } else {
+      setError(result.error || 'Failed to complete registration.');
     }
   };
 
@@ -78,6 +91,13 @@ export default function RegisterPage() {
           <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            <span>{success}</span>
           </div>
         )}
 

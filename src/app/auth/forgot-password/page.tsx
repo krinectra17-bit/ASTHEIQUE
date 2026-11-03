@@ -3,20 +3,32 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { resetPassword } from '@/app/auth/actions';
 import { Button } from '@/components/ui/button';
-import { Mail, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Mail, CheckCircle2, ArrowLeft, AlertCircle } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    const formData = new FormData();
+    formData.append('email', email);
+
+    const result = await resetPassword(formData);
     setIsLoading(false);
-    setSubmitted(true);
+
+    if (result.success) {
+      setSubmitted(true);
+    } else {
+      setError(result.error || 'Failed to dispatch recovery link.');
+    }
   };
 
   return (
@@ -39,6 +51,13 @@ export default function ForgotPasswordPage() {
             Enter your registered email to receive secure recovery instructions.
           </p>
         </div>
+
+        {error && (
+          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
         {submitted ? (
           <div className="space-y-4 text-center">

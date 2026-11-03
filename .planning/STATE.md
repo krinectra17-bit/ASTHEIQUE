@@ -1,37 +1,35 @@
 # AESTHIQUE — GSD PROJECT STATE
 
-> **Current Milestone:** Milestone 2 Completed -> Advancing to Milestone 3  
+> **Current Milestone:** Milestone 3 Completed -> Advancing to Milestone 4  
 > **Last Updated:** 2026-11-04  
-> **Active Focus:** Database Architecture, Supabase Migrations & Authentication
+> **Active Focus:** Product Catalog Architecture, Inventory Tracking & Search API
 
 ---
 
 ## Current Status Overview
-- **Repository:** Initialized git repository in `e:\AESTHIQUE`.
+- **Repository:** Initialized git repository in `e:\AESTHIQUE`, remote `https://github.com/krinectra17-bit/ASTHEIQUE.git`.
 - **Brand Assets:** Extracted and stored official logo at `public/brand/aesthique-logo.png`.
 - **Milestone 1 (Discovery & Architecture):** Complete with all 9 core specifications committed.
-- **Milestone 2 (Design System & Storefront):** 100% complete:
-  - Next.js 15 + TypeScript + Tailwind CSS with custom luxury color palette (Ivory `#F8F4ED`, Gold `#C99A68`, Copper `#B97852`, Espresso `#30251F`, Beige `#E9DFD2`).
-  - Storefront state management via `StoreProvider` (persistent cart, wishlist, coupon engine, toasts).
-  - 12-section Editorial Homepage with hero storytelling, shop by category, bestsellers, new arrivals, promo banner, customer reviews, and social gallery.
-  - Shop All catalog page with multi-facet filters (category, price range, stock) and sorting.
-  - Category dynamic pages (`/category/[slug]`).
-  - Product Details Page (PDP) with multi-photo gallery, zoom modal, variant switching, quantity steppers, pincode serviceability checker, and related products.
-  - Cart page & slide-over Mini Cart Drawer with free shipping progress bar.
-  - Wishlist management with one-click move to bag.
-  - Single-page checkout with Indian address validation, payment options (Razorpay & COD), and order summary.
-  - Customer Auth pages (Login, Register, Forgot Password).
-  - Customer Account portal (Dashboard, Order History, Real-time Shiprocket Tracking view).
-  - Brand & Legal pages (About Us, Contact Us, FAQ, Privacy, Terms, Shipping, Returns).
-  - Full production build (`npx next build`) passed with 21/21 routes prerendered.
+- **Milestone 2 (Design System & Storefront):** Complete with 12-section editorial homepage, catalog, PDP, cart, wishlist, checkout, and policy pages committed and pushed.
+- **Milestone 3 (Database & Authentication):** 100% complete:
+  - Reconciled 24-table PostgreSQL schema in `supabase/migrations/01_initial_schema.sql` with RLS, triggers, indexes, and automatic profile creation trigger on `auth.users`.
+  - Comprehensive seed data in `supabase/migrations/02_seed_data.sql` (10 initial categories, products, inventory, coupons, reviews, banners, settings).
+  - Supabase client wrappers created (`src/lib/supabase/client.ts`, `server.ts`, `admin.ts`).
+  - Supabase Auth integration with server actions (`signUp`, `signIn`, `signOut`, `resetPassword`, `updatePassword`).
+  - Auth code callback route (`/auth/callback`) and password reset form (`/auth/reset-password`).
+  - Customer Profile & Address Book CRUD actions (`getCustomerProfile`, `updateCustomerProfile`, `saveCustomerAddress`, `deleteCustomerAddress`).
+  - Customer Account portal (`/account`) with tabbed dashboard, address manager, and order tracking.
+  - Session Middleware (`src/middleware.ts`) for token refresh and protected route validation.
+  - Development Supabase credentials configured in `.env.local` (kept untracked).
+  - Build passed cleanly with 23/23 routes compiled.
 
 ---
 
 ## Milestone Progress Tracker
 - [x] **Milestone 1: Discovery & Architecture** (Completed)
 - [x] **Milestone 2: Design System & Storefront** (Completed)
-- [ ] **Milestone 3: Database & Authentication** (Active Next)
-- [ ] **Milestone 4: Product & Inventory Management**
+- [x] **Milestone 3: Database & Authentication** (Completed)
+- [ ] **Milestone 4: Product & Inventory Management** (Active Next)
 - [ ] **Milestone 5: Cart, Wishlist & Checkout Backend**
 - [ ] **Milestone 6: Razorpay Integration**
 - [ ] **Milestone 7: Shiprocket Integration**
@@ -42,6 +40,7 @@
 ---
 
 ## Blockers & External Credentials Needed
-- `NEXT_PUBLIC_SUPABASE_URL` & `SUPABASE_SERVICE_ROLE_KEY`: Required for live Supabase deployment. A full local/mockable Supabase client architecture will be in place for local development.
-- `RAZORPAY_KEY_ID` & `RAZORPAY_KEY_SECRET`: Test credentials needed for live test-mode payment capture.
-- `SHIPROCKET_EMAIL` & `SHIPROCKET_PASSWORD`: Sandbox credentials needed for live AWB generation.
+- `NEXT_PUBLIC_SUPABASE_URL` & `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: Configured with temporary development project.
+- `SUPABASE_SERVICE_ROLE_KEY`: Service-role key for administrative backend operations (bypassing RLS for admin tasks/syncs). Safe fallback mock mode handles missing key gracefully.
+- `RAZORPAY_KEY_ID` & `RAZORPAY_KEY_SECRET`: Test credentials needed for live test-mode payment capture (adapter supports mock test mode when unset).
+- `SHIPROCKET_EMAIL` & `SHIPROCKET_PASSWORD`: Sandbox credentials needed for live AWB generation (adapter supports mock courier routing when unset).

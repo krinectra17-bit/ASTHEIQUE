@@ -2,7 +2,8 @@
 
 > **Database Engine:** PostgreSQL 15+ (Supabase)  
 > **Security Model:** Row Level Security (RLS) enabled on all tables  
-> **Integrity:** Foreign Key Constraints with CASCADE/RESTRICT rules, Timestamps with auto-update triggers
+> **Integrity:** Foreign Key Constraints with CASCADE/RESTRICT rules, Timestamps with auto-update triggers  
+> **Table Count:** 24 Reconciled Relational Tables (Reconciled from preliminary 22-table draft)
 
 ---
 
