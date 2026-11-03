@@ -34,14 +34,14 @@
 - [x] Step 4.2: Server-side product discovery engine (full-text search, category filters, price sorting, pagination).
 - [x] Step 4.3: Real-time inventory tracking with stock reservation procedures, release upon checkout timeout, and low-stock alerts.
 
-### Phase 5: Cart, Wishlist & Checkout (Status: Active)
-- [ ] Step 5.1: Dual-state Cart engine (persistent guest cart + authenticated customer database cart).
-- [ ] Step 5.2: Server-authoritative pricing engine (subtotals, discounts, GST calculation, free shipping threshold).
-- [ ] Step 5.3: Coupon validation engine (percentage/fixed, MOV limits, usage caps).
-- [ ] Step 5.4: Customer Wishlist with one-click move to cart.
-- [ ] Step 5.5: Comprehensive single-page checkout (address collection, payment method selection, order summary).
+### Phase 5: Cart, Wishlist & Checkout (Status: Completed)
+- [x] Step 5.1: Dual-state Cart engine (persistent guest cart + authenticated customer database cart).
+- [x] Step 5.2: Server-authoritative pricing engine (subtotals, discounts, GST calculation, free shipping threshold).
+- [x] Step 5.3: Coupon validation engine (percentage/fixed, MOV limits, usage caps, redemption logging).
+- [x] Step 5.4: Customer Wishlist with one-click move to cart.
+- [x] Step 5.5: Comprehensive single-page checkout (address collection, payment method selection, atomic order creation).
 
-### Phase 6: Razorpay Payment Gateway Integration
+### Phase 6: Razorpay Payment Gateway Integration (Status: Active)
 - [ ] Step 6.1: Dedicated Razorpay service adapter with test mode support.
 - [ ] Step 6.2: Server-side order creation (`/api/checkout/create-intent`).
 - [ ] Step 6.3: Client-side Razorpay modal mount with AESTHIQUE theme.

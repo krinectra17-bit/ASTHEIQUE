@@ -1,53 +1,74 @@
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Truck, Package, Clock, MapPin } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { getOrderByNumber } from '@/lib/checkout/service';
+import { formatPrice, formatDate } from '@/lib/utils';
+import type { Metadata } from 'next';
 
 interface TrackPageProps {
   params: Promise<{ orderNumber: string }>;
 }
 
+export async function generateMetadata({ params }: TrackPageProps): Promise<Metadata> {
+  const { orderNumber } = await params;
+  return {
+    title: `Tracking Order ${orderNumber} | AESTHIQUE`,
+    description: `Real-time shipment tracking for order ${orderNumber}.`,
+  };
+}
+
 export default async function OrderTrackingPage({ params }: TrackPageProps) {
   const { orderNumber } = await params;
+  const order = await getOrderByNumber(orderNumber);
+
+  const courierName = order?.shipment?.courierName || 'Shiprocket / BlueDart Air';
+  const awbCode = order?.shipment?.awbCode || 'SR-89104429IN';
+  const deliveryCity = order?.shippingAddress?.city || 'Destination City';
+
+  const isDelivered = order?.status === 'DELIVERED';
+  const isShipped = order?.status === 'SHIPPED' || isDelivered;
+  const isProcessing = order?.status === 'PROCESSING' || isShipped;
 
   const milestones = [
     {
       title: 'Order Confirmed',
-      description: 'Order placed & payment verified through payment gateway.',
-      date: '02 Feb 2026, 11:30 AM',
+      description: order
+        ? `Order #${order.orderNumber} confirmed. Total amount: ${formatPrice(order.totalAmount)} (${order.paymentMethod}).`
+        : 'Order placed & payment verified through payment gateway.',
+      date: order ? formatDate(order.createdAt) : '02 Feb 2026, 11:30 AM',
       location: 'AESTHIQUE Central Studio, New Delhi',
       completed: true,
-      current: false,
+      current: !isProcessing,
     },
     {
       title: 'Packed & Manifest Generated',
       description: 'Hand-inspected, packed in luxury gift box, and Shiprocket manifest generated.',
-      date: '02 Feb 2026, 04:15 PM',
+      date: order ? 'Inspection complete' : '02 Feb 2026, 04:15 PM',
       location: 'Central Fulfillment Hub, Okhla',
-      completed: true,
-      current: false,
+      completed: isProcessing,
+      current: isProcessing && !isShipped,
     },
     {
       title: 'In Transit with Courier',
-      description: 'Handed over to Shiprocket Express logistics partner (AWB: SR-89104429IN).',
-      date: '03 Feb 2026, 08:45 AM',
+      description: `Handed over to ${courierName} (AWB: ${awbCode}).`,
+      date: isShipped ? 'In Transit' : 'Pending dispatch',
       location: 'Regional Sorting Facility, New Delhi',
-      completed: true,
-      current: true,
+      completed: isShipped,
+      current: isShipped && !isDelivered,
     },
     {
       title: 'Out for Delivery',
-      description: 'Shipment out for delivery with local courier executive.',
+      description: `Shipment out for delivery to ${deliveryCity} with local courier executive.`,
       date: 'Expected Today by 07:00 PM',
-      location: 'Destination Delivery Hub',
-      completed: false,
+      location: `${deliveryCity} Delivery Hub`,
+      completed: isDelivered,
       current: false,
     },
     {
       title: 'Delivered',
       description: 'Package delivered to recipient with signature confirmation.',
-      date: 'Pending',
-      location: 'Customer Address',
-      completed: false,
+      date: isDelivered ? 'Delivered' : 'Pending',
+      location: `${deliveryCity}`,
+      completed: isDelivered,
       current: false,
     },
   ];
@@ -81,7 +102,7 @@ export default async function OrderTrackingPage({ params }: TrackPageProps) {
             Courier Partner
           </span>
           <span className="font-bold text-aesthique-espresso text-sm mt-0.5 block">
-            Shiprocket / BlueDart Air
+            {courierName}
           </span>
           <span className="text-[11px] text-emerald-800 font-medium">Standard Express Air</span>
         </div>
@@ -91,7 +112,7 @@ export default async function OrderTrackingPage({ params }: TrackPageProps) {
             Air Waybill (AWB)
           </span>
           <span className="font-mono font-bold text-aesthique-espresso text-sm mt-0.5 block">
-            SR-89104429IN
+            {awbCode}
           </span>
           <span className="text-[11px] text-aesthique-espresso/60">Registered Tracking Code</span>
         </div>
@@ -101,11 +122,36 @@ export default async function OrderTrackingPage({ params }: TrackPageProps) {
             Estimated Delivery
           </span>
           <span className="font-bold text-aesthique-copper text-sm mt-0.5 block">
-            Within 24 Hours
+            {order?.shipment?.estimatedDelivery || 'Within 24 Hours'}
           </span>
           <span className="text-[11px] text-emerald-800 font-medium">On Schedule</span>
         </div>
       </div>
+
+      {/* Order Item Preview if loaded */}
+      {order && order.items && order.items.length > 0 && (
+        <div className="bg-white border border-aesthique-beige p-6 shadow-sm space-y-4">
+          <h3 className="font-editorial text-sm font-bold text-aesthique-espresso uppercase tracking-wider">
+            Shipment Contents ({order.items.length} items)
+          </h3>
+          <div className="divide-y divide-aesthique-beige/50">
+            {order.items.map((item, idx) => (
+              <div key={idx} className="py-2.5 flex items-center justify-between text-xs">
+                <div>
+                  <span className="font-semibold text-aesthique-espresso">{item.productName}</span>
+                  {item.variantName && (
+                    <span className="text-aesthique-copper ml-2">({item.variantName})</span>
+                  )}
+                  <span className="text-aesthique-espresso/60 ml-2">x {item.quantity}</span>
+                </div>
+                <span className="font-mono font-bold text-aesthique-espresso">
+                  {formatPrice(item.totalPrice)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Vertical Milestone Progress Timeline */}
       <div className="bg-white border border-aesthique-beige p-6 sm:p-10 shadow-sm space-y-8">

@@ -81,11 +81,63 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
-      // In production/API mode, this calls /api/checkout/create-intent
-      // Here we process the order atomically
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      // Call server-authoritative order creation API
+      const res = await fetch('/api/checkout/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart.map((item) => ({
+            productId: item.productId,
+            variantId: item.variantId || null,
+            quantity: item.quantity,
+          })),
+          shippingAddress: {
+            id: 'addr_' + Date.now(),
+            fullName: formData.fullName,
+            mobile: formData.mobile,
+            email: formData.email,
+            houseNumber: formData.houseNumber,
+            street: formData.street,
+            area: formData.area,
+            landmark: formData.landmark,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+            addressType: formData.addressType as any,
+            isDefaultShipping: true,
+            isDefaultBilling: true,
+          },
+          billingAddress: {
+            id: 'addr_' + Date.now(),
+            fullName: formData.fullName,
+            mobile: formData.mobile,
+            email: formData.email,
+            houseNumber: formData.houseNumber,
+            street: formData.street,
+            area: formData.area,
+            landmark: formData.landmark,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+            addressType: formData.addressType as any,
+            isDefaultShipping: true,
+            isDefaultBilling: true,
+          },
+          paymentMethod: formData.paymentMethod,
+          couponCode: appliedCoupon?.code || null,
+          customerEmail: formData.email,
+          customerPhone: formData.mobile,
+          notes: formData.orderNotes,
+        }),
+      });
 
-      const newOrderNumber = generateOrderNumber();
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to place order. Please review your details.');
+      }
+
+      const newOrderNumber = data.orderNumber || generateOrderNumber();
 
       // Store placed order in local customer history
       const placedOrder = {

@@ -20,7 +20,7 @@ interface StoreContextType {
   toggleWishlist: (product: Product) => void;
   isInWishlist: (productId: string) => boolean;
   moveToCart: (product: Product) => void;
-  applyCoupon: (code: string) => { success: boolean; message: string };
+  applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
   removeCoupon: () => void;
   toastMessage: string | null;
   showToast: (msg: string) => void;
@@ -203,10 +203,34 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setWishlist((prev) => prev.filter((p) => p.id !== product.id));
   };
 
-  const applyCoupon = (code: string) => {
+  const applyCoupon = async (code: string): Promise<{ success: boolean; message: string }> => {
     const cleanCode = code.trim().toUpperCase();
-    const matched = DEMO_COUPONS.find((c) => c.code.toUpperCase() === cleanCode);
+    const currentSubtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
 
+    try {
+      // 1. Attempt live server validation API
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: cleanCode, subtotal: currentSubtotal }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.valid && data.coupon) {
+          setAppliedCoupon(data.coupon);
+          showToast(data.message || `Coupon "${data.coupon.code}" applied!`);
+          return { success: true, message: data.message || `Applied coupon: ₹${data.discount} off.` };
+        } else {
+          return { success: false, message: data.message || `Coupon code "${cleanCode}" is invalid.` };
+        }
+      }
+    } catch {
+      // Fall through to fallback
+    }
+
+    // 2. Resilient local fallback
+    const matched = DEMO_COUPONS.find((c) => c.code.toUpperCase() === cleanCode);
     if (!matched) {
       return { success: false, message: `Coupon code "${code}" is invalid.` };
     }
