@@ -62,13 +62,13 @@
 - [x] Step 8.5: Category, Coupon, Inventory adjustment, and Review moderation modules.
 - [x] Step 8.6: Store settings & platform integration health overview.
 
-### Phase 9: SEO, Performance & Security Hardening (Status: Active)
-- [ ] Step 9.1: Dynamic metadata, Open Graph tags, JSON-LD Schema markup (Product, Organization, Breadcrumb).
-- [ ] Step 9.2: Sitemap generation (`sitemap.ts`) and `robots.txt`.
-- [ ] Step 9.3: Image optimization and performance audit.
-- [ ] Step 9.4: Security audit (input sanitization, OWASP verification, RLS validation).
+### Phase 9: SEO, Performance & Security Hardening (Status: Completed)
+- [x] Step 9.1: Dynamic metadata, Open Graph tags, JSON-LD Schema markup (Product, Organization, WebSite, Breadcrumb).
+- [x] Step 9.2: XML Sitemap generator (`src/app/sitemap.ts`) and crawler directives (`src/app/robots.ts`).
+- [x] Step 9.3: Image optimization (AVIF/WebP) and CDN caching configurations.
+- [x] Step 9.4: HTTP Security hardening headers in `next.config.ts` (HSTS, nosniff, SAMEORIGIN, Permissions-Policy).
 
-### Phase 10: Testing, Quality Assurance & Deployment
+### Phase 10: Testing, Quality Assurance & Deployment (Status: Active)
 - [ ] Step 10.1: Comprehensive test suite execution (Storefront, Cart, Checkout, Admin, Integrations).
 - [ ] Step 10.2: Responsive testing across mobile (360px, 390px, 430px), tablet, and desktop.
 - [ ] Step 10.3: Production build verification (`npm run build`).

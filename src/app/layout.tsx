@@ -7,6 +7,7 @@ import { Footer } from '@/components/storefront/footer';
 import { CartDrawer } from '@/components/storefront/cart-drawer';
 import { SearchModal } from '@/components/storefront/search-modal';
 import { ToastNotification } from '@/components/ui/toast';
+import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/seo/json-ld';
 
 export const metadata: Metadata = {
   title: {
@@ -62,6 +63,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
+      </head>
       <body className="min-h-screen flex flex-col justify-between selection:bg-aesthique-gold selection:text-white">
         <StoreProvider>
           <div className="flex-1 flex flex-col">

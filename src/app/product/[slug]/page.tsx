@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getProductBySlug, getProducts } from '@/lib/data/catalog-service';
 import { ProductDetailsClient } from './product-details-client';
+import { ProductJsonLd } from '@/components/seo/json-ld';
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -44,5 +45,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
 
-  return <ProductDetailsClient product={product} relatedProducts={relatedProducts} />;
+  return (
+    <>
+      <ProductJsonLd product={product} />
+      <ProductDetailsClient product={product} relatedProducts={relatedProducts} />
+    </>
+  );
 }
