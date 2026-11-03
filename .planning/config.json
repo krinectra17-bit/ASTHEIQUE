@@ -1,0 +1,21 @@
+{
+  "project": "AESTHIQUE",
+  "version": "1.0.0",
+  "methodology": "GSD",
+  "stack": {
+    "framework": "Next.js 15 (App Router)",
+    "language": "TypeScript",
+    "styling": "Tailwind CSS",
+    "database": "Supabase PostgreSQL",
+    "auth": "Supabase Auth",
+    "storage": "Supabase Storage",
+    "payments": "Razorpay",
+    "shipping": "Shiprocket",
+    "deployment": "Vercel"
+  },
+  "workflow": {
+    "auto_verify": true,
+    "atomic_commits": true,
+    "strict_rls": true
+  }
+}
