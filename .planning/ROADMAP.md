@@ -48,13 +48,13 @@
 - [x] Step 6.4: Cryptographic HMAC-SHA256 signature verification route (`/api/payments/razorpay/verify`).
 - [x] Step 6.5: Razorpay webhook listener with signature verification and idempotency handling (`/api/payments/razorpay/webhook`).
 
-### Phase 7: Shiprocket Shipping Integration (Status: Active)
-- [ ] Step 7.1: Dedicated Shiprocket service adapter with automated JWT authentication and cache-aware refresh.
-- [ ] Step 7.2: Real-time pincode serviceability & estimated delivery date checker.
-- [ ] Step 7.3: Order fulfillment workflow: shipment creation, courier allocation, AWB generation, and pickup scheduling.
-- [ ] Step 7.4: Tracking timeline synchronization and customer order tracking page.
+### Phase 7: Shiprocket Shipping Integration (Status: Completed)
+- [x] Step 7.1: Dedicated Shiprocket service adapter with automated JWT authentication and cache-aware refresh.
+- [x] Step 7.2: Real-time pincode serviceability & estimated delivery date checker.
+- [x] Step 7.3: Order fulfillment workflow: shipment creation, courier allocation, AWB generation, and pickup scheduling.
+- [x] Step 7.4: Tracking timeline synchronization and customer order tracking page.
 
-### Phase 8: Complete Admin Dashboard (`/admin`)
+### Phase 8: Complete Admin Dashboard (`/admin`) (Status: Active)
 - [ ] Step 8.1: Secure Admin authentication and server-side RBAC guard (`admin_users`).
 - [ ] Step 8.2: Dashboard overview with real-time KPI metrics, revenue charts, and low-stock notifications.
 - [ ] Step 8.3: Product & Inventory CRUD manager with multi-image gallery management.
