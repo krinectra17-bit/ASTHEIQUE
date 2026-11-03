@@ -1,23 +1,35 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { CATEGORIES, PRODUCTS } from '@/lib/data/mock-catalog';
+import { getCategoryBySlug, getProducts } from '@/lib/data/catalog-service';
 import { ProductCard } from '@/components/storefront/product-card';
 import { Sparkles, ChevronRight } from 'lucide-react';
+import type { Metadata } from 'next';
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const category = await getCategoryBySlug(slug);
+  if (!category) return { title: 'Category Not Found | AESTHIQUE' };
+
+  return {
+    title: `${category.name} | AESTHIQUE`,
+    description: category.description || `Explore ${category.name} at AESTHIQUE.`,
+  };
+}
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params;
-  const category = CATEGORIES.find((c) => c.slug === slug);
+  const category = await getCategoryBySlug(slug);
 
   if (!category) {
     notFound();
   }
 
-  const categoryProducts = PRODUCTS.filter((p) => p.categorySlug === slug);
+  const categoryProducts = await getProducts({ categorySlug: slug });
 
   return (
     <div className="space-y-12 pb-16">

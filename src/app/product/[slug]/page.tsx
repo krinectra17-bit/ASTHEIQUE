@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { PRODUCTS } from '@/lib/data/mock-catalog';
+import { getProductBySlug, getProducts } from '@/lib/data/catalog-service';
 import { ProductDetailsClient } from './product-details-client';
 
 interface ProductPageProps {
@@ -9,11 +9,11 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = PRODUCTS.find((p) => p.slug === slug);
-  if (!product) return { title: 'Product Not Found' };
+  const product = await getProductBySlug(slug);
+  if (!product) return { title: 'Product Not Found | AESTHIQUE' };
 
   return {
-    title: product.name,
+    title: `${product.name} | AESTHIQUE`,
     description: product.shortDescription,
     openGraph: {
       title: `${product.name} | AESTHIQUE`,
@@ -32,15 +32,17 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  const relatedProducts = PRODUCTS.filter(
-    (p) => p.categoryId === product.categoryId && p.id !== product.id
-  );
+  // Fetch related products in the same category
+  const allCategoryProducts = await getProducts({ categorySlug: product.categorySlug });
+  const relatedProducts = allCategoryProducts
+    .filter((p) => p.id !== product.id)
+    .slice(0, 4);
 
   return <ProductDetailsClient product={product} relatedProducts={relatedProducts} />;
 }

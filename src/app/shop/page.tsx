@@ -1,25 +1,45 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { CATEGORIES, PRODUCTS } from '@/lib/data/mock-catalog';
 import { ProductCard } from '@/components/storefront/product-card';
-import { SlidersHorizontal, X, Sparkles } from 'lucide-react';
+import { SlidersHorizontal, X, Sparkles, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function ShopAllPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+function ShopCatalogContent() {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get('category') || 'all';
+  const initialSearch = searchParams.get('search') || searchParams.get('q') || '';
+  const initialSort = searchParams.get('sort') || 'featured';
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
   const [priceRange, setPriceRange] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<string>('featured');
+  const [sortBy, setSortBy] = useState<string>(initialSort);
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   // Filter & Sort calculation
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((p) => {
+      // Search term
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const matchesName = p.name.toLowerCase().includes(q);
+        const matchesDesc = p.shortDescription.toLowerCase().includes(q);
+        const matchesSku = p.sku.toLowerCase().includes(q);
+        const matchesCategory = p.categoryName?.toLowerCase().includes(q);
+        if (!matchesName && !matchesDesc && !matchesSku && !matchesCategory) {
+          return false;
+        }
+      }
+
       // Category filter
       if (selectedCategory !== 'all' && p.categorySlug !== selectedCategory) {
         return false;
       }
+
       // Price filter
       const effectivePrice = p.salePrice ?? p.regularPrice;
       if (priceRange === 'under-1500' && effectivePrice >= 1500) return false;
@@ -38,17 +58,19 @@ export default function ShopAllPage() {
       if (sortBy === 'price-high') return priceB - priceA;
       if (sortBy === 'bestseller') return (b.isBestseller ? 1 : 0) - (a.isBestseller ? 1 : 0);
       if (sortBy === 'newest') return (b.isNewArrival ? 1 : 0) - (a.isNewArrival ? 1 : 0);
-      return 0;
+      return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
     });
-  }, [selectedCategory, priceRange, sortBy, inStockOnly]);
+  }, [selectedCategory, searchQuery, priceRange, sortBy, inStockOnly]);
 
   const activeFiltersCount =
     (selectedCategory !== 'all' ? 1 : 0) +
+    (searchQuery.trim() !== '' ? 1 : 0) +
     (priceRange !== 'all' ? 1 : 0) +
     (inStockOnly ? 1 : 0);
 
   const clearFilters = () => {
     setSelectedCategory('all');
+    setSearchQuery('');
     setPriceRange('all');
     setInStockOnly(false);
     setSortBy('featured');
@@ -70,8 +92,9 @@ export default function ShopAllPage() {
         </p>
       </div>
 
-      {/* Control Bar: Filters & Sorting */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 border border-aesthique-beige/70 shadow-sm">
+      {/* Control Bar: Filters, Search & Sorting */}
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 border border-aesthique-beige/70 shadow-sm">
+        {/* Left: Filter Toggle & Clear */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsFilterDrawerOpen(true)}
@@ -97,13 +120,37 @@ export default function ShopAllPage() {
           )}
         </div>
 
+        {/* Center: Live Catalog Search */}
+        <div className="relative flex-1 max-w-md">
+          <Search className="w-3.5 h-3.5 text-aesthique-espresso/40 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search by title, material, or SKU..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-aesthique-ivory/60 border border-aesthique-beige pl-9 pr-8 py-2 text-xs text-aesthique-espresso placeholder:text-aesthique-espresso/40 focus:outline-none focus:border-aesthique-gold transition-colors"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-aesthique-espresso/40 hover:text-aesthique-espresso"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Right: Count & Sorting */}
         <div className="flex items-center justify-between sm:justify-end gap-3 text-xs">
           <span className="text-aesthique-espresso/60 hidden sm:inline">
             Showing <strong className="text-aesthique-espresso">{filteredProducts.length}</strong> items
           </span>
 
           <div className="flex items-center gap-2">
-            <label htmlFor="sortSelect" className="text-aesthique-espresso/70 uppercase tracking-wider text-[11px] font-medium">
+            <label
+              htmlFor="sortSelect"
+              className="text-aesthique-espresso/70 uppercase tracking-wider text-[11px] font-medium"
+            >
               Sort By:
             </label>
             <select
@@ -129,13 +176,13 @@ export default function ShopAllPage() {
             No essentials match your filter criteria
           </h3>
           <p className="text-xs text-aesthique-espresso/60 max-w-sm mx-auto">
-            Try adjusting your price range or selected collection to view more products.
+            Try adjusting your search query, price range, or selected collection.
           </p>
           <button
             onClick={clearFilters}
             className="inline-flex bg-aesthique-espresso text-aesthique-ivory text-xs uppercase tracking-widest px-6 py-3 font-semibold hover:bg-black transition-colors"
           >
-            Reset Filters
+            Reset All Filters
           </button>
         </div>
       ) : (
@@ -262,5 +309,19 @@ export default function ShopAllPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ShopAllPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-7xl mx-auto px-4 py-16 text-center text-xs text-aesthique-espresso/60 uppercase tracking-widest">
+          Loading catalog...
+        </div>
+      }
+    >
+      <ShopCatalogContent />
+    </Suspense>
   );
 }

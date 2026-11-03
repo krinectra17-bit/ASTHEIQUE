@@ -29,12 +29,12 @@
 - [x] Step 3.3: Build Supabase Auth integration (Customer registration, login, logout, password recovery, session handling).
 - [x] Step 3.4: Customer Account portal (Profile overview, saved address book, order history, account settings).
 
-### Phase 4: Product & Inventory Management (Status: Active)
-- [ ] Step 4.1: Database seed script with rich realistic lifestyle products across initial 10 categories.
-- [ ] Step 4.2: Server-side product discovery engine (full-text search, category filters, price sorting).
-- [ ] Step 4.3: Real-time inventory tracking with stock reservation and low-stock alerts.
+### Phase 4: Product & Inventory Management (Status: Completed)
+- [x] Step 4.1: Database seed script with rich realistic lifestyle products across initial 10 categories.
+- [x] Step 4.2: Server-side product discovery engine (full-text search, category filters, price sorting, pagination).
+- [x] Step 4.3: Real-time inventory tracking with stock reservation procedures, release upon checkout timeout, and low-stock alerts.
 
-### Phase 5: Cart, Wishlist & Checkout
+### Phase 5: Cart, Wishlist & Checkout (Status: Active)
 - [ ] Step 5.1: Dual-state Cart engine (persistent guest cart + authenticated customer database cart).
 - [ ] Step 5.2: Server-authoritative pricing engine (subtotals, discounts, GST calculation, free shipping threshold).
 - [ ] Step 5.3: Coupon validation engine (percentage/fixed, MOV limits, usage caps).

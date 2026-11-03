@@ -1,27 +1,28 @@
 # AESTHIQUE — GSD PROJECT STATE
 
-> **Current Milestone:** Milestone 3 Completed -> Advancing to Milestone 4  
+> **Current Milestone:** Milestone 4 Completed -> Advancing to Milestone 5  
 > **Last Updated:** 2026-11-04  
-> **Active Focus:** Product Catalog Architecture, Inventory Tracking & Search API
+> **Active Focus:** Cart, Wishlist & Checkout Backend Engine
 
 ---
 
 ## Current Status Overview
-- **Repository:** Initialized git repository in `e:\AESTHIQUE`, remote `https://github.com/krinectra17-bit/ASTHEIQUE.git`.
-- **Brand Assets:** Extracted and stored official logo at `public/brand/aesthique-logo.png`.
-- **Milestone 1 (Discovery & Architecture):** Complete with all 9 core specifications committed.
-- **Milestone 2 (Design System & Storefront):** Complete with 12-section editorial homepage, catalog, PDP, cart, wishlist, checkout, and policy pages committed and pushed.
-- **Milestone 3 (Database & Authentication):** 100% complete:
-  - Reconciled 24-table PostgreSQL schema in `supabase/migrations/01_initial_schema.sql` with RLS, triggers, indexes, and automatic profile creation trigger on `auth.users`.
-  - Comprehensive seed data in `supabase/migrations/02_seed_data.sql` (10 initial categories, products, inventory, coupons, reviews, banners, settings).
-  - Supabase client wrappers created (`src/lib/supabase/client.ts`, `server.ts`, `admin.ts`).
-  - Supabase Auth integration with server actions (`signUp`, `signIn`, `signOut`, `resetPassword`, `updatePassword`).
-  - Auth code callback route (`/auth/callback`) and password reset form (`/auth/reset-password`).
-  - Customer Profile & Address Book CRUD actions (`getCustomerProfile`, `updateCustomerProfile`, `saveCustomerAddress`, `deleteCustomerAddress`).
-  - Customer Account portal (`/account`) with tabbed dashboard, address manager, and order tracking.
-  - Session Middleware (`src/middleware.ts`) for token refresh and protected route validation.
-  - Development Supabase credentials configured in `.env.local` (kept untracked).
-  - Build passed cleanly with 23/23 routes compiled.
+- **Repository:** Connected to `https://github.com/krinectra17-bit/ASTHEIQUE.git` on `main`.
+- **Milestone 1 (Discovery & Architecture):** Completed & pushed.
+- **Milestone 2 (Design System & Storefront):** Completed & pushed.
+- **Milestone 3 (Database & Authentication):** Completed & pushed (24 reconciled tables, RLS, customer auth, address book, Supabase SSR client).
+- **Milestone 4 (Product & Inventory Management):** 100% complete:
+  - Inventory stored procedures in `supabase/migrations/03_inventory_procedures.sql` (`check_stock_availability`, `reserve_stock`, `release_stock`, `commit_stock_reservation`, `get_low_stock_products`).
+  - Robust TypeScript inventory service in `src/lib/inventory/service.ts` supporting atomic stock checks, reservation holds, release upon abandonment, order fulfillment commits, low stock alerts, and in-memory fallback.
+  - Enhanced catalog service in `src/lib/data/catalog-service.ts` supporting full-text search, category/subcategory hierarchy, price filtering, in-stock filtering, multiple sort options, pagination, and live inventory association.
+  - Product discovery & inventory API routes:
+    - `/api/products` (GET: search, filter, paginate)
+    - `/api/products/[slug]` (GET: single product with full variants and inventory)
+    - `/api/inventory/check` (POST: validate stock availability)
+    - `/api/inventory/low-stock` (GET: admin low-stock alert monitoring)
+  - Upgraded PDP (`/product/[slug]`) and Category (`/category/[slug]`) pages to use the live catalog service.
+  - Upgraded Shop All page (`/shop`) with live search bar, URL param synchronization, and real-time count.
+  - Production build passed (26/26 routes prerendered).
 
 ---
 
@@ -29,8 +30,8 @@
 - [x] **Milestone 1: Discovery & Architecture** (Completed)
 - [x] **Milestone 2: Design System & Storefront** (Completed)
 - [x] **Milestone 3: Database & Authentication** (Completed)
-- [ ] **Milestone 4: Product & Inventory Management** (Active Next)
-- [ ] **Milestone 5: Cart, Wishlist & Checkout Backend**
+- [x] **Milestone 4: Product & Inventory Management** (Completed)
+- [ ] **Milestone 5: Cart, Wishlist & Checkout Backend** (Active Next)
 - [ ] **Milestone 6: Razorpay Integration**
 - [ ] **Milestone 7: Shiprocket Integration**
 - [ ] **Milestone 8: Complete Admin Dashboard**
