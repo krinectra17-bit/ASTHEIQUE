@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { getAdminKpis, getAdminOrders, getAdminProducts } from './actions';
+import { checkAdminAuth, getAdminKpis, getAdminOrders, getAdminProducts } from './actions';
 import { formatPrice, formatDate } from '@/lib/utils';
 import {
   TrendingUp,
@@ -23,6 +23,11 @@ export const metadata = {
 };
 
 export default async function AdminDashboardPage() {
+  const auth = await checkAdminAuth();
+  if (!auth.authenticated) {
+    return null;
+  }
+
   const kpis = await getAdminKpis();
   const orders = await getAdminOrders();
   const products = await getAdminProducts();
