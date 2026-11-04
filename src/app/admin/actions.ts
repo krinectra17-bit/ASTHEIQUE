@@ -63,7 +63,7 @@ const mockAdminCoupons = [
 const mockAdminReviews: ProductReview[] = [
   {
     id: 'rev-01',
-    productId: 'p0000001-0000-0000-0000-000000000001',
+    productId: 'a0000001-0000-0000-0000-000000000001',
     authorName: 'Ananya Sharma',
     rating: 5,
     headline: 'Exquisite craftsmanship and calming presence',
@@ -75,7 +75,7 @@ const mockAdminReviews: ProductReview[] = [
   },
   {
     id: 'rev-02',
-    productId: 'p0000001-0000-0000-0000-000000000002',
+    productId: 'a0000001-0000-0000-0000-000000000002',
     authorName: 'Rohan Mehta',
     rating: 5,
     headline: 'Elevated my daily coffee brewing ritual',
@@ -87,7 +87,7 @@ const mockAdminReviews: ProductReview[] = [
   },
   {
     id: 'rev-03',
-    productId: 'p0000001-0000-0000-0000-000000000003',
+    productId: 'a0000001-0000-0000-0000-000000000003',
     authorName: 'Dr. Meera Sen',
     rating: 4,
     headline: 'Softest waffle linen I have ever owned',

@@ -81,7 +81,7 @@ localOrdersStore.set('AES-2026-98124', {
   items: [
     {
       id: 'item_demo_01',
-      productId: 'p0000001-0000-0000-0000-000000000001',
+      productId: 'a0000001-0000-0000-0000-000000000001',
       productName: 'Solace Sculptural Ceramic Vase',
       variantName: 'Ivory Stoneware',
       sku: 'AES-VASE-01',

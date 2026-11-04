@@ -36,7 +36,7 @@ async function runTestSuite() {
 
   const mockItemA: CartItem = {
     id: 'ci_01',
-    productId: 'p0000001-0000-0000-0000-000000000001',
+    productId: 'a0000001-0000-0000-0000-000000000001',
     productName: 'Solace Ceramic Vase',
     sku: 'AES-VASE-01',
     unitPrice: 1200,
@@ -47,7 +47,7 @@ async function runTestSuite() {
 
   const mockItemB: CartItem = {
     id: 'ci_02',
-    productId: 'p0000001-0000-0000-0000-000000000002',
+    productId: 'a0000001-0000-0000-0000-000000000002',
     productName: 'Aura Brass Dripper',
     sku: 'AES-COFFEE-01',
     unitPrice: 1850,
@@ -142,7 +142,7 @@ async function runTestSuite() {
 
   const stockItem = [
     {
-      productId: 'p0000001-0000-0000-0000-000000000001',
+      productId: 'a0000001-0000-0000-0000-000000000001',
       quantity: 2,
     },
   ];
@@ -176,7 +176,7 @@ async function runTestSuite() {
   // Test 3.4: Excessive quantity rejection
   const excessiveStock = [
     {
-      productId: 'p0000001-0000-0000-0000-000000000001',
+      productId: 'a0000001-0000-0000-0000-000000000001',
       quantity: 999999,
     },
   ];

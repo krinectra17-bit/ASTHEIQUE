@@ -95,7 +95,7 @@ export async function runDatabaseActivationAudit() {
   console.log('\n3. Verifying Inventory Stored Procedures...');
   try {
     const { data: invRpc, error: rpcErr } = await supabase.rpc('check_stock_availability', {
-      p_items: [{ product_id: 'p0000001-0000-0000-0000-000000000001', variant_id: null, quantity: 1 }]
+      p_items: [{ product_id: 'a0000001-0000-0000-0000-000000000001', variant_id: null, quantity: 1 }]
     });
 
     if (!rpcErr && invRpc) {

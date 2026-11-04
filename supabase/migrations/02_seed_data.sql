@@ -2,6 +2,7 @@
 -- AESTHIQUE E-COMMERCE PLATFORM — SEED DATA
 -- Migration: 02_seed_data.sql
 -- Description: Initial categories, products, inventory, coupons, banners
+-- Note: All UUIDs strictly follow RFC 4122 hexadecimal syntax [0-9a-f]
 -- ====================================================================
 
 -- 1. Insert Initial 10 Categories
@@ -28,7 +29,7 @@ INSERT INTO public.products (
     seo_title, seo_description
 ) VALUES
 (
-    'p0000001-0000-0000-0000-000000000001',
+    'a0000001-0000-0000-0000-000000000001',
     'c0000001-0000-0000-0000-000000000003',
     'Solace Sculptural Ceramic Vase',
     'solace-sculptural-ceramic-vase',
@@ -44,7 +45,7 @@ INSERT INTO public.products (
     'Handcrafted matte stoneware ceramic vase designed for understated luxury living spaces.'
 ),
 (
-    'p0000001-0000-0000-0000-000000000002',
+    'a0000001-0000-0000-0000-000000000002',
     'c0000001-0000-0000-0000-000000000002',
     'Aura Cast Brass Coffee Pour-Over Dripper',
     'aura-cast-brass-coffee-pour-over-dripper',
@@ -60,7 +61,7 @@ INSERT INTO public.products (
     'Solid cast brass manual coffee pour-over dripper with brushed champagne gold finish.'
 ),
 (
-    'p0000001-0000-0000-0000-000000000003',
+    'a0000001-0000-0000-0000-000000000003',
     'c0000001-0000-0000-0000-000000000001',
     'Serene Pure Waffle Linen Throw Blanket',
     'serene-pure-waffle-linen-throw-blanket',
@@ -76,7 +77,7 @@ INSERT INTO public.products (
     'Artisanal 100% French flax waffle linen throw blanket pre-washed for heirloom comfort.'
 ),
 (
-    'p0000001-0000-0000-0000-000000000004',
+    'a0000001-0000-0000-0000-000000000004',
     'c0000001-0000-0000-0000-000000000005',
     'Nocturne Amber & Smoked Cedar Soy Candle',
     'nocturne-amber-smoked-cedar-soy-candle',
@@ -97,30 +98,30 @@ SET regular_price = EXCLUDED.regular_price, sale_price = EXCLUDED.sale_price;
 -- 3. Insert Product Images
 INSERT INTO public.product_images (id, product_id, image_url, alt_text, display_order, is_primary)
 VALUES
-    ('img00001-0000-0000-0000-000000000001', 'p0000001-0000-0000-0000-000000000001', 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1000&q=80', 'Solace Sculptural Ceramic Vase Primary', 1, true),
-    ('img00001-0000-0000-0000-000000000002', 'p0000001-0000-0000-0000-000000000001', 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=1000&q=80', 'Solace Vase Detail', 2, false),
-    ('img00001-0000-0000-0000-000000000003', 'p0000001-0000-0000-0000-000000000002', 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1000&q=80', 'Aura Brass Dripper Primary', 1, true),
-    ('img00001-0000-0000-0000-000000000004', 'p0000001-0000-0000-0000-000000000003', 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=1000&q=80', 'Serene Waffle Linen Throw Primary', 1, true),
-    ('img00001-0000-0000-0000-000000000005', 'p0000001-0000-0000-0000-000000000004', 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80', 'Nocturne Soy Candle Primary', 1, true)
+    ('f0000001-0000-0000-0000-000000000001', 'a0000001-0000-0000-0000-000000000001', 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1000&q=80', 'Solace Sculptural Ceramic Vase Primary', 1, true),
+    ('f0000001-0000-0000-0000-000000000002', 'a0000001-0000-0000-0000-000000000001', 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=1000&q=80', 'Solace Vase Detail', 2, false),
+    ('f0000001-0000-0000-0000-000000000003', 'a0000001-0000-0000-0000-000000000002', 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1000&q=80', 'Aura Brass Dripper Primary', 1, true),
+    ('f0000001-0000-0000-0000-000000000004', 'a0000001-0000-0000-0000-000000000003', 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=1000&q=80', 'Serene Waffle Linen Throw Primary', 1, true),
+    ('f0000001-0000-0000-0000-000000000005', 'a0000001-0000-0000-0000-000000000004', 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80', 'Nocturne Soy Candle Primary', 1, true)
 ON CONFLICT (id) DO UPDATE
 SET image_url = EXCLUDED.image_url, is_primary = EXCLUDED.is_primary;
 
 -- 4. Insert Inventory Levels
 INSERT INTO public.inventory (product_id, variant_id, stock_quantity, reserved_quantity, low_stock_threshold)
 VALUES
-    ('p0000001-0000-0000-0000-000000000001', NULL, 28, 0, 5),
-    ('p0000001-0000-0000-0000-000000000002', NULL, 15, 0, 4),
-    ('p0000001-0000-0000-0000-000000000003', NULL, 22, 0, 5),
-    ('p0000001-0000-0000-0000-000000000004', NULL, 45, 0, 10)
+    ('a0000001-0000-0000-0000-000000000001', NULL, 28, 0, 5),
+    ('a0000001-0000-0000-0000-000000000002', NULL, 15, 0, 4),
+    ('a0000001-0000-0000-0000-000000000003', NULL, 22, 0, 5),
+    ('a0000001-0000-0000-0000-000000000004', NULL, 45, 0, 10)
 ON CONFLICT (product_id, variant_id) DO UPDATE
 SET stock_quantity = EXCLUDED.stock_quantity;
 
 -- 5. Insert Verified Customer Reviews
 INSERT INTO public.product_reviews (id, product_id, author_name, rating, headline, review_text, is_verified_purchase, is_approved)
 VALUES
-    ('rev00001-0000-0000-0000-000000000001', 'p0000001-0000-0000-0000-000000000001', 'Ananya Sharma', 5, 'Exquisite craftsmanship and calming presence', 'The Solace Vase arrived in museum-grade protective packaging. The matte stoneware texture is gorgeous in morning daylight. It truly feels like an art gallery piece in my living room.', true, true),
-    ('rev00001-0000-0000-0000-000000000002', 'p0000001-0000-0000-0000-000000000002', 'Rohan Mehta', 5, 'Elevated my daily coffee brewing ritual', 'The solid brass has a substantial, luxurious weight. It extracts evenly and looks stunning resting on my kitchen counter. Easily my favorite purchase this year.', true, true),
-    ('rev00001-0000-0000-0000-000000000003', 'p0000001-0000-0000-0000-000000000003', 'Dr. Meera Sen', 5, 'Softest waffle linen I have ever owned', 'Breathable, heavy drape without feeling stifling. The Oatmeal Beige matches our minimalist bedroom palette perfectly. Will definitely be ordering the Clay color for gifting.', true, true)
+    ('d0000001-0000-0000-0000-000000000001', 'a0000001-0000-0000-0000-000000000001', 'Ananya Sharma', 5, 'Exquisite craftsmanship and calming presence', 'The Solace Vase arrived in museum-grade protective packaging. The matte stoneware texture is gorgeous in morning daylight. It truly feels like an art gallery piece in my living room.', true, true),
+    ('d0000001-0000-0000-0000-000000000002', 'a0000001-0000-0000-0000-000000000002', 'Rohan Mehta', 5, 'Elevated my daily coffee brewing ritual', 'The solid brass has a substantial, luxurious weight. It extracts evenly and looks stunning resting on my kitchen counter. Easily my favorite purchase this year.', true, true),
+    ('d0000001-0000-0000-0000-000000000003', 'a0000001-0000-0000-0000-000000000003', 'Dr. Meera Sen', 5, 'Softest waffle linen I have ever owned', 'Breathable, heavy drape without feeling stifling. The Oatmeal Beige matches our minimalist bedroom palette perfectly. Will definitely be ordering the Clay color for gifting.', true, true)
 ON CONFLICT (id) DO UPDATE
 SET rating = EXCLUDED.rating, is_approved = EXCLUDED.is_approved;
 
@@ -144,8 +145,8 @@ SET value = EXCLUDED.value;
 -- 8. Insert Homepage Banners
 INSERT INTO public.homepage_banners (id, banner_type, title, subtitle, image_url, link_url, button_text, display_order, is_active)
 VALUES
-    ('ban00001-0000-0000-0000-000000000001', 'announcement', 'Complimentary shipping across India on orders over ₹1,999 • Use code WELCOME10 for 10% off', NULL, NULL, '/shop', NULL, 1, true),
-    ('ban00001-0000-0000-0000-000000000002', 'hero', 'Make Everyday Living Beautiful.', 'Thoughtfully selected essentials for a more beautiful, comfortable and effortless everyday life.', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1800&q=80', '/shop', 'Explore Collection', 2, true),
-    ('ban00001-0000-0000-0000-000000000003', 'promo', 'The Art of Mindful Spaces', 'Warm ceramics, tactile linens, and quiet functional objects designed to bring calm into modern routines.', 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1600&q=80', '/category/home-decor', 'Shop New Arrivals', 3, true)
+    ('ba000001-0000-0000-0000-000000000001', 'announcement', 'Complimentary shipping across India on orders over ₹1,999 • Use code WELCOME10 for 10% off', NULL, NULL, '/shop', NULL, 1, true),
+    ('ba000001-0000-0000-0000-000000000002', 'hero', 'Make Everyday Living Beautiful.', 'Thoughtfully selected essentials for a more beautiful, comfortable and effortless everyday life.', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1800&q=80', '/shop', 'Explore Collection', 2, true),
+    ('ba000001-0000-0000-0000-000000000003', 'promo', 'The Art of Mindful Spaces', 'Warm ceramics, tactile linens, and quiet functional objects designed to bring calm into modern routines.', 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1600&q=80', '/category/home-decor', 'Shop New Arrivals', 3, true)
 ON CONFLICT (id) DO UPDATE
 SET title = EXCLUDED.title, subtitle = EXCLUDED.subtitle, image_url = EXCLUDED.image_url;
