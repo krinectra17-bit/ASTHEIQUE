@@ -1,10 +1,40 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { ADMIN_COOKIE_NAME, verifyAdminSessionToken } from '@/lib/admin/auth';
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
+
+  const url = request.nextUrl.clone();
+
+  // ------------------------------------------------------------------
+  // ADMIN ACCESS GUARD — Strict server-side route isolation
+  // ------------------------------------------------------------------
+  if (url.pathname.startsWith('/admin')) {
+    const adminToken = request.cookies.get(ADMIN_COOKIE_NAME)?.value;
+    const { valid } = await verifyAdminSessionToken(adminToken);
+
+    // If user is accessing protected admin sub-routes without an authenticated session,
+    // immediately redirect back to /admin login screen
+    if (!valid && url.pathname !== '/admin') {
+      const redirectUrl = new URL('/admin', request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  // Admin APIs Guard
+  if (url.pathname.startsWith('/api/admin')) {
+    const adminToken = request.cookies.get(ADMIN_COOKIE_NAME)?.value;
+    const { valid } = await verifyAdminSessionToken(adminToken);
+    if (!valid) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized administrative access' },
+        { status: 401 }
+      );
+    }
+  }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tdvuvvrootrfrmjmwvbv.supabase.co';
   const supabaseKey =
@@ -32,23 +62,7 @@ export async function middleware(request: NextRequest) {
   });
 
   // Refresh auth session
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const url = request.nextUrl.clone();
-
-  // If visiting protected account page without session, allow client fallback in dev,
-  // or redirect to login
-  if (!user && url.pathname.startsWith('/account') && !url.pathname.startsWith('/account/track')) {
-    // In local development, if patron session exists in cookie or local testing, allow through
-    const hasLocalSession = request.cookies.get('aesthique_customer_session');
-    if (!hasLocalSession) {
-      // url.pathname = '/auth/login';
-      // url.searchParams.set('next', request.nextUrl.pathname);
-      // return NextResponse.redirect(url);
-    }
-  }
+  await supabase.auth.getUser();
 
   return supabaseResponse;
 }

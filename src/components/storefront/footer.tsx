@@ -183,11 +183,7 @@ export const Footer: React.FC = () => {
                   Return & Refund Guidelines
                 </Link>
               </li>
-              <li>
-                <Link href="/admin/login" className="text-aesthique-gold/80 hover:underline">
-                  Store Administration Portal
-                </Link>
-              </li>
+
             </ul>
           </div>
 

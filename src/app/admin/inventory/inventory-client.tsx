@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Product } from '@/types';
 import { formatPrice } from '@/lib/utils';
+import { adjustAdminStock } from '../actions';
 import { Boxes, AlertTriangle, Plus, Search, RefreshCw, Check } from 'lucide-react';
 
 interface InventoryClientProps {
@@ -26,19 +27,22 @@ export function InventoryClient({ initialProducts }: InventoryClientProps) {
 
   const lowStockItems = products.filter((p) => p.stockQuantity <= p.lowStockThreshold);
 
-  const handleApplyAdjustment = (e: React.FormEvent) => {
+  const handleApplyAdjustment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!adjustingProduct) return;
+
+    const newStock = Math.max(0, adjustingProduct.stockQuantity + adjustDelta);
 
     setProducts((prev) =>
       prev.map((p) =>
         p.id === adjustingProduct.id
-          ? { ...p, stockQuantity: Math.max(0, p.stockQuantity + adjustDelta) }
+          ? { ...p, stockQuantity: newStock }
           : p
       )
     );
 
     setIsSuccess(true);
+    await adjustAdminStock(adjustingProduct.id, newStock, adjustReason);
     setTimeout(() => {
       setIsSuccess(false);
       setAdjustingProduct(null);
