@@ -412,20 +412,49 @@ CREATE INDEX IF NOT EXISTS idx_homepage_banners_type ON public.homepage_banners(
 -- ====================================================================
 
 -- Auto-update timestamps triggers
+DROP TRIGGER IF EXISTS tr_profiles_updated_at ON public.profiles;
 CREATE TRIGGER tr_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_admin_users_updated_at ON public.admin_users;
 CREATE TRIGGER tr_admin_users_updated_at BEFORE UPDATE ON public.admin_users FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_user_addresses_updated_at ON public.user_addresses;
 CREATE TRIGGER tr_user_addresses_updated_at BEFORE UPDATE ON public.user_addresses FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_categories_updated_at ON public.categories;
 CREATE TRIGGER tr_categories_updated_at BEFORE UPDATE ON public.categories FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_products_updated_at ON public.products;
 CREATE TRIGGER tr_products_updated_at BEFORE UPDATE ON public.products FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_product_variants_updated_at ON public.product_variants;
 CREATE TRIGGER tr_product_variants_updated_at BEFORE UPDATE ON public.product_variants FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_inventory_updated_at ON public.inventory;
 CREATE TRIGGER tr_inventory_updated_at BEFORE UPDATE ON public.inventory FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_carts_updated_at ON public.carts;
 CREATE TRIGGER tr_carts_updated_at BEFORE UPDATE ON public.carts FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_cart_items_updated_at ON public.cart_items;
 CREATE TRIGGER tr_cart_items_updated_at BEFORE UPDATE ON public.cart_items FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_coupons_updated_at ON public.coupons;
 CREATE TRIGGER tr_coupons_updated_at BEFORE UPDATE ON public.coupons FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_orders_updated_at ON public.orders;
 CREATE TRIGGER tr_orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_payments_updated_at ON public.payments;
 CREATE TRIGGER tr_payments_updated_at BEFORE UPDATE ON public.payments FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_shipments_updated_at ON public.shipments;
 CREATE TRIGGER tr_shipments_updated_at BEFORE UPDATE ON public.shipments FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_product_reviews_updated_at ON public.product_reviews;
 CREATE TRIGGER tr_product_reviews_updated_at BEFORE UPDATE ON public.product_reviews FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+DROP TRIGGER IF EXISTS tr_homepage_banners_updated_at ON public.homepage_banners;
 CREATE TRIGGER tr_homepage_banners_updated_at BEFORE UPDATE ON public.homepage_banners FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
 -- Auto-create profile on Supabase auth.users signup
@@ -491,62 +520,76 @@ ALTER TABLE public.store_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.homepage_banners ENABLE ROW LEVEL SECURITY;
 
 -- 11.1 Profiles Policies
+DROP POLICY IF EXISTS "Users can view their own profile" ON public.profiles;
 CREATE POLICY "Users can view their own profile"
     ON public.profiles FOR SELECT
     USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
 CREATE POLICY "Users can update their own profile"
     ON public.profiles FOR UPDATE
     USING (auth.uid() = id);
 
 -- 11.2 Admin Users Policies
+DROP POLICY IF EXISTS "Admins can view admin_users table" ON public.admin_users;
 CREATE POLICY "Admins can view admin_users table"
     ON public.admin_users FOR SELECT
     USING (auth.uid() = id AND is_active = true);
 
 -- 11.3 User Addresses Policies
+DROP POLICY IF EXISTS "Users manage their own addresses" ON public.user_addresses;
 CREATE POLICY "Users manage their own addresses"
     ON public.user_addresses FOR ALL
     USING (auth.uid() = user_id);
 
 -- 11.4 Public Catalog Read Policies
+DROP POLICY IF EXISTS "Public can view active categories" ON public.categories;
 CREATE POLICY "Public can view active categories"
     ON public.categories FOR SELECT
     USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view active products" ON public.products;
 CREATE POLICY "Public can view active products"
     ON public.products FOR SELECT
     USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view product images" ON public.product_images;
 CREATE POLICY "Public can view product images"
     ON public.product_images FOR SELECT
     USING (true);
 
+DROP POLICY IF EXISTS "Public can view active product variants" ON public.product_variants;
 CREATE POLICY "Public can view active product variants"
     ON public.product_variants FOR SELECT
     USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view active coupons" ON public.coupons;
 CREATE POLICY "Public can view active coupons"
     ON public.coupons FOR SELECT
     USING (is_active = true AND (expires_at IS NULL OR expires_at > NOW()));
 
+DROP POLICY IF EXISTS "Public can view approved reviews" ON public.product_reviews;
 CREATE POLICY "Public can view approved reviews"
     ON public.product_reviews FOR SELECT
     USING (is_approved = true);
 
+DROP POLICY IF EXISTS "Public can view active homepage banners" ON public.homepage_banners;
 CREATE POLICY "Public can view active homepage banners"
     ON public.homepage_banners FOR SELECT
     USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view public store settings" ON public.store_settings;
 CREATE POLICY "Public can view public store settings"
     ON public.store_settings FOR SELECT
     USING (key IN ('store_info', 'shipping_thresholds', 'policies'));
 
 -- 11.5 Cart & Wishlist User Policies
+DROP POLICY IF EXISTS "Users manage their own cart" ON public.carts;
 CREATE POLICY "Users manage their own cart"
     ON public.carts FOR ALL
     USING (auth.uid() = user_id OR (user_id IS NULL AND session_token IS NOT NULL));
 
+DROP POLICY IF EXISTS "Users manage their cart items" ON public.cart_items;
 CREATE POLICY "Users manage their cart items"
     ON public.cart_items FOR ALL
     USING (EXISTS (
@@ -555,10 +598,12 @@ CREATE POLICY "Users manage their cart items"
         AND (carts.user_id = auth.uid() OR carts.session_token IS NOT NULL)
     ));
 
+DROP POLICY IF EXISTS "Users manage their own wishlist" ON public.wishlists;
 CREATE POLICY "Users manage their own wishlist"
     ON public.wishlists FOR ALL
     USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users manage their wishlist items" ON public.wishlist_items;
 CREATE POLICY "Users manage their wishlist items"
     ON public.wishlist_items FOR ALL
     USING (EXISTS (
@@ -568,10 +613,12 @@ CREATE POLICY "Users manage their wishlist items"
     ));
 
 -- 11.6 Orders & Payments Customer Policies
+DROP POLICY IF EXISTS "Customers can view their own orders" ON public.orders;
 CREATE POLICY "Customers can view their own orders"
     ON public.orders FOR SELECT
     USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Customers can view their order items" ON public.order_items;
 CREATE POLICY "Customers can view their order items"
     ON public.order_items FOR SELECT
     USING (EXISTS (
@@ -580,6 +627,7 @@ CREATE POLICY "Customers can view their order items"
         AND orders.user_id = auth.uid()
     ));
 
+DROP POLICY IF EXISTS "Customers can view their order shipments" ON public.shipments;
 CREATE POLICY "Customers can view their order shipments"
     ON public.shipments FOR SELECT
     USING (EXISTS (
@@ -588,6 +636,7 @@ CREATE POLICY "Customers can view their order shipments"
         AND orders.user_id = auth.uid()
     ));
 
+DROP POLICY IF EXISTS "Customers can view shipment events" ON public.shipment_events;
 CREATE POLICY "Customers can view shipment events"
     ON public.shipment_events FOR SELECT
     USING (EXISTS (
@@ -597,6 +646,7 @@ CREATE POLICY "Customers can view shipment events"
         AND orders.user_id = auth.uid()
     ));
 
+DROP POLICY IF EXISTS "Customers can view their payments" ON public.payments;
 CREATE POLICY "Customers can view their payments"
     ON public.payments FOR SELECT
     USING (EXISTS (
@@ -606,11 +656,13 @@ CREATE POLICY "Customers can view their payments"
     ));
 
 -- 11.7 Newsletter Insert Policy
+DROP POLICY IF EXISTS "Public can subscribe to newsletter" ON public.newsletter_subscribers;
 CREATE POLICY "Public can subscribe to newsletter"
     ON public.newsletter_subscribers FOR INSERT
     WITH CHECK (email IS NOT NULL);
 
 -- 11.8 Product Review Write Policy
+DROP POLICY IF EXISTS "Authenticated users can submit reviews" ON public.product_reviews;
 CREATE POLICY "Authenticated users can submit reviews"
     ON public.product_reviews FOR INSERT
     WITH CHECK (auth.uid() = user_id AND is_approved = false);
